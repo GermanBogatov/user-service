@@ -87,6 +87,7 @@ func (j *JWT) GenerateAccessToken(user entity.User) (string, string, error) {
 			ExpiresAt: time.Now().Add(j.jwtTTL).Unix(),
 		},
 		Email: user.Email,
+		Roles: user.Roles,
 	})
 
 	accessToken, err := token.SignedString(key)

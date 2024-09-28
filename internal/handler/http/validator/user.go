@@ -20,6 +20,10 @@ func ValidateSignUpUser(user model.SignUpRequest) error {
 		return apperror.ErrEmptyPassword
 	}
 
+	if !strings.Contains(user.Email, "@") {
+		return apperror.ErrInvalidEmailFormat
+	}
+
 	return nil
 }
 
@@ -27,6 +31,10 @@ func ValidateSignInUser(user model.SignInRequest) error {
 	if strings.TrimSpace(user.Email) == "" {
 		return apperror.ErrEmptyEmail
 	}
+	if !strings.Contains(user.Email, "@") {
+		return apperror.ErrInvalidEmailFormat
+	}
+
 	if strings.TrimSpace(user.Password) == "" {
 		return apperror.ErrEmptyPassword
 	}

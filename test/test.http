@@ -6,7 +6,7 @@ Content-Type: application/json
 {
   "name": "German",
   "surname": "Bogatov",
-  "email": "bogatovv@mail.ru",
+  "email": "bogatovgrmn@mail.ru",
   "password": "23Bogatov"
 }
 
@@ -16,7 +16,7 @@ POST http://localhost:8080/public/v1/auth/sign-in
 Content-Type: application/json
 
 {
-  "email": "bogatovd@mail.ru",
+  "email": "bogatovgrmn@mail.ru",
   "password": "23Bogatov"
 }
 
@@ -28,5 +28,5 @@ Content-Type: application/json
 ### Get User By ID
 POST http://localhost:8080/public/v1/users/890e0761-d600-41d7-88a7-fb48143f716d
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzUzNTQ1NCwianRpIjoiODZlZjUxZGQtNDQxOC00MDc5LTgwNTYtNmZkOWEzOTE0ZmU5IiwiZW1haWwiOiJib2dhdG92dkBtYWlsLnJ1In0.9rbJeUWTIZfZUCCOTWRBYHr_KAPsCEHIaSX10YcrDwM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzUzNzIwMiwianRpIjoiNDg3NjFmZDUtNzUxMy00ODQzLTk0NzAtMDJlN2U4NjAwMjkwIiwiZW1haWwiOiJib2dhdG92Z3JtbkBtYWlsLnJ1Iiwicm9sZXMiOlsiZGV2ZWxvcGVyIl19.rVe8Pk2BLMGi4IaWAXb0pYNl8C4HX60GT4RZykfd76c
 

@@ -16,7 +16,7 @@ services:
       - POSTGRES_DB=postgres
     container_name: database
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:5431:5432"
 
   cache:
     networks:
@@ -29,3 +29,34 @@ services:
     environment:
       - REDIS_DB=0
 
+  app:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - database
+      - cache
+    networks:
+      - app-network
+    container_name: app
+    env_file:
+      - configs/example.docker.env
+    ports:
+      - "127.0.0.1:8080:8080"
+
+  migration:
+    restart: on-failure
+    networks:
+      - app-network
+    environment:
+      - USER_SERVICE_MIGRATIONS_SYSTEM_NAME=user_migration_service
+      - USER_SERVICE_MIGRATIONS_ENV=dev
+      - USER_SERVICE_MIGRATIONS_LOG_LEVEL=INFO
+      - USER_SERVICE_POSTGRES_URL=postgres://amogus:amogus@database:5432/postgres?sslmode=disable
+    build:
+      context: .
+      dockerfile: migrations/Dockerfile
+    container_name: migration
+    depends_on:
+      - database

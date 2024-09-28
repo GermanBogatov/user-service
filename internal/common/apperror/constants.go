@@ -12,6 +12,7 @@ var (
 	ErrEmptyName            = errors.New("field 'name' is empty")
 	ErrEmptySurname         = errors.New("field 'surname' is empty")
 	ErrEmptyEmail           = errors.New("field 'email' is empty")
+	ErrInvalidEmailFormat   = errors.New("invalid email format")
 	ErrEmptyPassword        = errors.New("field 'password' is empty")
 
 	ErrRedisNil = errors.New("не найдена запись в редисе")

@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"fmt"
 	"github.com/GermanBogatov/user-service/internal/common/apperror"
 	"github.com/GermanBogatov/user-service/internal/common/metrics"
@@ -56,6 +57,8 @@ func appMiddleware(h appHandler) http.HandlerFunc {
 				return
 			}
 
+			setCtxValue(r, config.ParamID, claims.Id)
+			setCtxValue(r, config.ParamRoles, claims.Roles)
 			//todo прокинуть ID
 			fmt.Println(claims.Id)
 		}
@@ -69,4 +72,10 @@ func appMiddleware(h appHandler) http.HandlerFunc {
 
 		metrics.IncRequestTotal(metrics.OkStatus, method, pattern)
 	}
+}
+
+func setCtxValue(r *http.Request, key, value any) {
+	ctx := r.Context()
+	req := r.WithContext(context.WithValue(ctx, key, value))
+	*r = *req
 }

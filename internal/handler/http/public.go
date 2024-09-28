@@ -2,6 +2,7 @@ package http
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/GermanBogatov/user-service/internal/common/apperror"
 	"github.com/GermanBogatov/user-service/internal/common/helpers"
 	"github.com/GermanBogatov/user-service/internal/common/response"
@@ -98,7 +99,10 @@ func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) error {
 // GetUserByID - хэндлер получения пользователя по идентификатору
 func (h *Handler) GetUserByID(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
-
+	res1 := ctx.Value("id")
+	res2 := ctx.Value("roles")
+	fmt.Println("res1=", res1)
+	fmt.Println("res2=", res2)
 	userID, err := helpers.GetUuidFromPath(r, config.ParamID)
 	if err != nil {
 		return apperror.BadRequestError(errors.Wrap(err, "get uuid from header"))

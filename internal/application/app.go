@@ -42,11 +42,6 @@ func NewApplication(ctx context.Context, cfg *config.Config) (App, error) {
 		return App{}, errors.Wrap(err, "connection postgresql")
 	}
 
-	err = migrateUP(cfg.Postgres.URL)
-	if err != nil {
-		return App{}, errors.Wrap(err, "migrate up failed")
-	}
-
 	logging.Info("repo initializing...")
 	userRepo := postgres.NewUser(pgClient)
 
