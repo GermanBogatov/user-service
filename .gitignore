@@ -1,0 +1,7 @@
+.database
+.idea
+.logs
+parser/configs/develop.env
+/.env
+/cert/
+.helm/charts/
