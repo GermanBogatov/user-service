@@ -19,6 +19,15 @@ type Postgres struct {
 	ConnTimeout           int    `env:"USER_SERVICE_POSTGRES_CONN_TIMEOUT_SEC" env-default:"1"`
 }
 
+type Redis struct {
+	Host       string `env:"USER_SERVICE_REDIS_HOST" env-required:"true"`
+	Port       string `env:"USER_SERVICE_REDIS_PORT" env-required:"true"`
+	Password   string `env:"USER_SERVICE_REDIS_PASSWORD"`
+	DB         int    `env:"USER_SERVICE_REDIS_DB" env-default:"0"`
+	UserTTL    int    `env:"USER_SERVICE_REDIS_USER_TTL" env-default:"20"`
+	RefreshTTL int    `env:"USER_SERVICE_REDIS_REFRESH_TTL" env-default:"300"`
+}
+
 type Http struct {
 	Port         string `env:"USER_SERVICE_HTTP_PORT" env-required:"true"`
 	WriteTimeout int    `env:"USER_SERVICE_HTTP_WRITE_TIMEOUT_SEC" env-default:"60"`
@@ -28,8 +37,10 @@ type Http struct {
 type Config struct {
 	Health             Health
 	Postgres           Postgres
+	Redis              Redis
 	Http               Http
 	ShutdownTimeoutSec int `env:"USER_SERVICE_SHUTDOWN_TIMEOUT_SEC" env-default:"5"`
+	JwtTTL             int `env:"USER_SERVICE_JWT_TTL" env-default:"300"`
 }
 
 // NewEnvConfig - парсим конфиг
@@ -74,6 +85,13 @@ func validateENV(config *Config) error {
 
 	if len(config.Http.Port) == 0 {
 		return errors.New("empty http.Port")
+	}
+
+	if len(config.Redis.Host) == 0 {
+		return errors.New("empty redis.Host")
+	}
+	if len(config.Redis.Port) == 0 {
+		return errors.New("empty redis.Port")
 	}
 
 	return nil

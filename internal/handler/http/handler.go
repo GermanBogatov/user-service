@@ -11,11 +11,11 @@ import (
 )
 
 const (
-	metricPath     = "/metrics"
-	healthPath     = "/health"
-	integrationV2  = "/integration/v2"
-	privateV2      = "/private/v2"
-	publicV2       = "/public/v2"
+	metricPath = "/metrics"
+	healthPath = "/health"
+	publicV1   = "/public/v1"
+	authV1     = "/public/v1/auth"
+
 	livePath       = "/live"
 	readinessPath  = "/readiness"
 	swaggerPattern = "/swagger-ui/*"
@@ -23,12 +23,14 @@ const (
 
 type Handler struct {
 	userService service.IUser
+	jwtService  service.IJWT
 	cfg         *config.Config
 }
 
-func NewHandler(cfg *config.Config, userService service.IUser) *Handler {
+func NewHandler(cfg *config.Config, userService service.IUser, jwtService service.IJWT) *Handler {
 	return &Handler{
 		userService: userService,
+		jwtService:  jwtService,
 		cfg:         cfg,
 	}
 }
@@ -46,8 +48,13 @@ func (h *Handler) InitRoutes() *chi.Mux {
 	})
 	r.Get(swaggerPattern, httpSwagger.Handler())
 
-	r.Route(publicV2, func(r chi.Router) {
-		r.Post("/user", appMiddleware(h.CreateUser))
+	r.Route(authV1, func(r chi.Router) {
+		r.Post("/sign-up", appMiddleware(h.SignUp))
+		r.Post("/sign-in", appMiddleware(h.SignIn))
 	})
+	r.Route(publicV1, func(r chi.Router) {
+		r.Post("/users/{id}", appMiddleware(h.GetUserByID))
+	})
+
 	return r
 }

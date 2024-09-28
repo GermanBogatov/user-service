@@ -1,7 +1,9 @@
 package helpers
 
 import (
+	"crypto/sha256"
 	"fmt"
+	"github.com/GermanBogatov/user-service/internal/config"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"net/http"
@@ -45,4 +47,11 @@ func GetOptionalParamFromQuery(r *http.Request, key string) *string {
 	}
 
 	return &param
+}
+
+func GeneratePasswordHash(password string) string {
+	hash := sha256.New()
+	hash.Write([]byte(password))
+
+	return fmt.Sprintf("%x", hash.Sum([]byte(config.JWTTokenSalt)))
 }

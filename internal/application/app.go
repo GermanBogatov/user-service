@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"github.com/GermanBogatov/user-service/internal/config"
 	httpHandler "github.com/GermanBogatov/user-service/internal/handler/http"
+	"github.com/GermanBogatov/user-service/internal/repository/cache"
 	"github.com/GermanBogatov/user-service/internal/repository/postgres"
 	"github.com/GermanBogatov/user-service/internal/service"
 	"github.com/GermanBogatov/user-service/pkg/logging"
 	"github.com/GermanBogatov/user-service/pkg/postgresql"
+	"github.com/GermanBogatov/user-service/pkg/redis"
 	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
 	"net"
@@ -28,6 +30,11 @@ type App struct {
 // NewApplication - подключаем различные бд, инициализируем слои и роуты.
 func NewApplication(ctx context.Context, cfg *config.Config) (App, error) {
 
+	redisClient, err := redis.NewClient(cfg.Redis.Host, cfg.Redis.Port, cfg.Redis.Password, cfg.Redis.DB)
+	if err != nil {
+		return App{}, errors.Wrap(err, "connection redis client")
+	}
+
 	logging.Info("connection postgresql...")
 	pgClient, err := postgresql.NewPostgresqlClient(ctx, cfg.Postgres.URL, cfg.Postgres.MaxOpenConn,
 		cfg.Postgres.ConnMaxLifetimeMinute, cfg.Postgres.ConnAttempts, cfg.Postgres.ConnTimeout)
@@ -43,11 +50,15 @@ func NewApplication(ctx context.Context, cfg *config.Config) (App, error) {
 	logging.Info("repo initializing...")
 	userRepo := postgres.NewUser(pgClient)
 
+	cacheRepo := cache.NewStorage(redisClient, cfg.Redis.UserTTL, cfg.Redis.RefreshTTL)
+	logging.Info("cache initializing...")
+	jwtService := service.NewJWT(userRepo, cacheRepo, config.JWTSecret, cfg.JwtTTL)
+
 	logging.Info("service initializing...")
 	userService := service.NewUser(userRepo)
 
 	logging.Info("handler initializing...")
-	appHandler := httpHandler.NewHandler(cfg, userService)
+	appHandler := httpHandler.NewHandler(cfg, userService, jwtService)
 	router := appHandler.InitRoutes()
 
 	return App{

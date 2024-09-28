@@ -43,7 +43,16 @@ func ApplicationError(err error) *AppError {
 
 // InternalServerError - ошибка c кодом 500
 func InternalServerError(err error) *AppError {
+	if errors.Is(err, ErrUserNotFound) {
+		return NotFoundError(err)
+	}
+
+	if errors.Is(err, ErrUserIsExistWithEmail) {
+		return ConflictError(err)
+	}
+
 	return NewAppErr(http.StatusInternalServerError, ErrType500, err)
+
 }
 
 // UnauthorizedError - ошибка c кодом 401
@@ -58,5 +67,5 @@ func ConflictError(err error) *AppError {
 
 // NotFoundError - ошибка c кодом 404
 func NotFoundError(err error) *AppError {
-	return NewAppErr(http.StatusConflict, ErrType404, err)
+	return NewAppErr(http.StatusNotFound, ErrType404, err)
 }
