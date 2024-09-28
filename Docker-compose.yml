@@ -1,0 +1,20 @@
+version: "3.8"
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  #postgres
+  database:
+    networks:
+      - app-network
+    restart: always
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=amogus
+      - POSTGRES_PASSWORD=amogus
+      - POSTGRES_DB=postgres
+    container_name: database
+    ports:
+      - "127.0.0.1:5432:5432"
+
