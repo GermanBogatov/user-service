@@ -47,32 +47,27 @@ func (c *Cache) Get(ctx context.Context, key string) (string, error) {
 	return value, nil
 }
 
+// Delete - удаление записи из кэша по ключу
 func (c *Cache) Delete(ctx context.Context, key string) error {
 	return c.client.Del(ctx, key).Err()
 }
 
 // GetUser - получение пользователя из кэша
 func (c *Cache) GetUser(ctx context.Context, key string) (entity.User, error) {
-	//defer metrics.ObserveRequestDurationPerMethodDB(metrics.Cache, metrics.GetUserCache)()
-
 	val, err := c.client.Get(ctx, key).Result()
 	if err != nil {
 		if errors.Is(err, redis.Nil) {
-			//metrics.IncRequestTotalDB(metrics.GetUserCache, metrics.OkStatus)
 			return entity.User{}, apperror.ErrRedisNil
 		}
-		//	metrics.IncRequestTotalDB(metrics.GetUserCache, metrics.FailStatus)
 		return entity.User{}, err
 	}
 
 	var user entity.User
 	err = json.Unmarshal([]byte(val), &user)
 	if err != nil {
-		//metrics.IncRequestTotalDB(metrics.GetUserCache, metrics.FailStatus)
 		return entity.User{}, err
 	}
 
-	//metrics.IncRequestTotalDB(metrics.GetUserCache, metrics.OkStatus)
 	return user, nil
 }
 
@@ -91,7 +86,7 @@ func (c *Cache) SetUser(ctx context.Context, key string, user entity.User) error
 	return nil
 }
 
-// SetUser - добавление пользователя в кеш.
+// SetRefreshToken - добавление рефреш токена в кэш.
 func (c *Cache) SetRefreshToken(ctx context.Context, key, userID string) error {
 	_, err := c.client.Set(ctx, key, userID, c.refreshTTL).Result()
 	if err != nil {

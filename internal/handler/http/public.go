@@ -14,6 +14,7 @@ import (
 	"net/http"
 )
 
+// SignUp - хэндлер регистрации
 func (h *Handler) SignUp(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
 
@@ -57,6 +58,7 @@ func (h *Handler) SignUp(w http.ResponseWriter, r *http.Request) error {
 
 }
 
+// SignIn - хэндлер авторизации
 func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
 
@@ -93,10 +95,11 @@ func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) error {
 	return response.RespondSuccess(w, mapper.MapToUserWithJWTResponse(http.StatusOK, user))
 }
 
+// GetUserByID - хэндлер получения пользователя по идентификатору
 func (h *Handler) GetUserByID(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
 
-	userID, err := helpers.GetUuidFromHeader(r, config.ParamID)
+	userID, err := helpers.GetUuidFromPath(r, config.ParamID)
 	if err != nil {
 		return apperror.BadRequestError(errors.Wrap(err, "get uuid from header"))
 	}
@@ -106,5 +109,22 @@ func (h *Handler) GetUserByID(w http.ResponseWriter, r *http.Request) error {
 		return apperror.InternalServerError(err)
 	}
 
-	return response.RespondSuccess(w, mapper.MapToUserWithJWTResponse(http.StatusOK, user))
+	return response.RespondSuccess(w, mapper.MapToUserResponse(http.StatusOK, user))
+}
+
+// UpdateRefreshToken - хэндлер обновления jwt-токена
+func (h *Handler) UpdateRefreshToken(w http.ResponseWriter, r *http.Request) error {
+	ctx := r.Context()
+
+	refreshToken, err := helpers.GetStringFromPath(r, config.ParamID)
+	if err != nil {
+		return apperror.BadRequestError(errors.Wrap(err, "get uuid from header"))
+	}
+
+	token, newRefreshToken, err := h.jwtService.UpdateRefreshToken(ctx, refreshToken)
+	if err != nil {
+		return apperror.InternalServerError(err)
+	}
+
+	return response.RespondSuccess(w, mapper.MapToJWTResponse(http.StatusOK, token, newRefreshToken))
 }

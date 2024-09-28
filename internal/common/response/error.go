@@ -28,8 +28,6 @@ func RespondError(w http.ResponseWriter, r *http.Request, err error) {
 	if errWrite != nil {
 		logging.Errorf("error write response: %s", errWrite)
 	}
-
-	return
 }
 
 // NewAppErrorResponse - json ответ с кастомной ошибкой и статусом

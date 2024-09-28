@@ -6,7 +6,7 @@ Content-Type: application/json
 {
   "name": "German",
   "surname": "Bogatov",
-  "email": "bogatov@mail.ru",
+  "email": "bogatovv@mail.ru",
   "password": "23Bogatov"
 }
 
@@ -16,17 +16,17 @@ POST http://localhost:8080/public/v1/auth/sign-in
 Content-Type: application/json
 
 {
-  "email": "bogatov@mail.ru",
+  "email": "bogatovd@mail.ru",
   "password": "23Bogatov"
 }
 
 ### Refresh
-POST http://localhost:8000/auth/refresh=dd7e03e1-8000-40c6-a722-e1bd064e2b65
+POST http://localhost:8080/public/v1/auth/refresh/9ca28c36-7001-469e-8ebf-f7fe5f99c3d4
 Content-Type: application/json
 
 
 ### Get User By ID
-POST http://localhost:8080/public/v1/users/5993e495-c7db-4060-853b-c98315ea8c95
+POST http://localhost:8080/public/v1/users/890e0761-d600-41d7-88a7-fb48143f716d
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzUzMzExOCwianRpIjoiYThmODdhNDctM2JlNy00M2Q0LThlNzMtYjJkZWNiNTMzYzM3IiwiZW1haWwiOiJib2dhdG92QG1haWwucnUifQ.p3s2b-Zdzovi0cjTWkIllSzrwfw6PWO4__tCMWnQyYU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTcyNzUzNTQ1NCwianRpIjoiODZlZjUxZGQtNDQxOC00MDc5LTgwNTYtNmZkOWEzOTE0ZmU5IiwiZW1haWwiOiJib2dhdG92dkBtYWlsLnJ1In0.9rbJeUWTIZfZUCCOTWRBYHr_KAPsCEHIaSX10YcrDwM
 

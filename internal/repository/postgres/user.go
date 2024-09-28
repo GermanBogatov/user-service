@@ -46,7 +46,6 @@ func (u *User) CreateUser(ctx context.Context, user entity.User) error {
 				return apperror.ErrUserIsExistWithEmail
 			}
 			return err
-			return err
 		}
 	}
 	return nil

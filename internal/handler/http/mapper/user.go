@@ -68,3 +68,13 @@ func MapToUserResponse(code int, user entity.User) response.ViewResponse {
 		},
 	}
 }
+
+func MapToJWTResponse(code int, token, refreshToken string) response.ViewResponse {
+	return response.ViewResponse{
+		Code: code,
+		Result: model.JWT{
+			Token:        token,
+			RefreshToken: refreshToken,
+		},
+	}
+}

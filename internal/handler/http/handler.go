@@ -51,6 +51,7 @@ func (h *Handler) InitRoutes() *chi.Mux {
 	r.Route(authV1, func(r chi.Router) {
 		r.Post("/sign-up", appMiddleware(h.SignUp))
 		r.Post("/sign-in", appMiddleware(h.SignIn))
+		r.Post("/refresh/{id}", appMiddleware(h.UpdateRefreshToken))
 	})
 	r.Route(publicV1, func(r chi.Router) {
 		r.Post("/users/{id}", appMiddleware(h.GetUserByID))

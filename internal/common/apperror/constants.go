@@ -3,6 +3,7 @@ package apperror
 import "github.com/pkg/errors"
 
 var (
+	ErrRefreshTokenNotFound = errors.New("refresh token not found")
 	ErrUserNotFound         = errors.New("user not found")
 	ErrUserIsExistWithEmail = errors.New("user with this email exists")
 	ErrMalformedToken       = errors.New("malformed token")

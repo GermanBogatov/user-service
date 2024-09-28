@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/GermanBogatov/user-service/internal/common/apperror"
 	"github.com/GermanBogatov/user-service/internal/entity"
 	"github.com/GermanBogatov/user-service/internal/repository/cache"
 	"github.com/GermanBogatov/user-service/internal/repository/postgres"
@@ -36,9 +37,13 @@ type IJWT interface {
 	GenerateAccessToken(user entity.User) (string, string, error)
 }
 
+// UpdateRefreshToken - обновление рефреш токена
 func (j *JWT) UpdateRefreshToken(ctx context.Context, refreshToken string) (string, string, error) {
 	userID, err := j.cache.Get(ctx, refreshToken)
 	if err != nil {
+		if errors.Is(err, redis.Nil) {
+			return "", "", apperror.ErrRefreshTokenNotFound
+		}
 		return "", "", err
 	}
 
@@ -71,6 +76,7 @@ func (j *JWT) UpdateRefreshToken(ctx context.Context, refreshToken string) (stri
 
 }
 
+// GenerateAccessToken - генерация рефреш токена
 func (j *JWT) GenerateAccessToken(user entity.User) (string, string, error) {
 	key := []byte(j.secret)
 

@@ -51,6 +51,10 @@ func InternalServerError(err error) *AppError {
 		return ConflictError(err)
 	}
 
+	if errors.Is(err, ErrRefreshTokenNotFound) {
+		return ConflictError(err)
+	}
+
 	return NewAppErr(http.StatusInternalServerError, ErrType500, err)
 
 }

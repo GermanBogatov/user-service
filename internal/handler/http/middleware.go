@@ -56,8 +56,8 @@ func appMiddleware(h appHandler) http.HandlerFunc {
 				return
 			}
 
+			//todo прокинуть ID
 			fmt.Println(claims.Id)
-			return
 		}
 
 		err := h(w, r)
